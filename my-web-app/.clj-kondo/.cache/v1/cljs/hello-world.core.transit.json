@@ -1,1 +1,0 @@
-["^ ","~$hello",["^ ","~:row",6,"~:col",1,"~:fixed-arities",["~#set",[1]],"~:name","^0","~:ns","~$hello-world.core","~:top-ns","^7","~:arities",["^ ","~i1",["^ ","~:ret",["^4",["~:nil"]],"~:arglist-str","[s]"]],"~:type","~:fn"],"~:filename","/var/folders/85/7w5spn4917l1cdg_8nrv4xjh0000gn/T/betterthantomorrow.calva/crm19r/src/hello_world/core.cljs"]
