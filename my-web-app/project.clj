@@ -3,10 +3,22 @@
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [ring/ring-defaults "0.3.2"]
                  [ring/ring-core "1.9.0"]
+                ;;  [ring.middleware.resource "0.10.0"]
                  [ring/ring-jetty-adapter "1.9.0"]
                  [ring/ring-devel "1.9.0"]
                  [compojure "1.7.0"]
-                 [com.nopolabs/clozxing "0.1.1"]]
+                 [com.nopolabs/clozxing "0.1.1"]
+                 [org.clojure/clojurescript "1.11.54"]
+                 [hiccup "1.0.5"]
+                 [ring/ring-anti-forgery "1.3.0"]]
+  :plugins [[lein-cljsbuild "1.1.7"]]
+  :cljsbuild
+  {:builds
+   [{:id "cljs"
+     :source-paths ["cljs/src/my_web_app"]
+     :compiler {:output-to "resources/public/js/app.js"
+                :optimizations :advanced
+                :pretty-print false}}]}
   :main ^:skip-aot my-web-app.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

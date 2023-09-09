@@ -1,0 +1,39 @@
+/* Ваш стиль для шапки */
+.header {
+    background-color: #000000; /* Цвет фона */
+    color: #fff; /* Цвет текста */
+    padding: 10px; /* Отступы */
+    border-radius: 10px; /* Закругления у бэкграунда */
+    display: flex; /* Для выравнивания элементов */
+    justify-content: space-between; /* Распределить элементы по ширине */
+    align-items: center; /* Выравнивание по вертикали */
+}
+
+.nav-list {
+    list-style-type: none; /* Убираем маркеры списка */
+    padding: 0;
+}
+
+.nav-item {
+    margin-right: 50px; /* Отступ между элементами */
+    display: inline; /* Элементы списка в одну линию */
+}
+
+.nav-item a {
+    color: #ffffff; /* Цвет ссылок */
+    text-decoration: none; /* Убираем подчеркивание */
+    font-weight: bold; /* Жирный шрифт для ссылок */
+    padding: 5px 15px; /* Увеличение отступов вокруг текста ссылок */
+}
+
+/* Стили для кнопки Login */
+.login-button {
+    text-decoration: none;
+    background-color: #28a745; /* Цвет фона кнопки */
+    color: #fff; /* Цвет текста */
+    padding: 10px 20px; /* Отступы */
+    border: none; /* Убираем границу */
+    border-radius: 10px; /* Закругления у кнопки */
+    cursor: pointer; /* Изменение курсора при наведении */
+    font-size: 16px; /* Увеличение размера текста */
+}
