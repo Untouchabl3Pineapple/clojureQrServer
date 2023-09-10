@@ -8,7 +8,8 @@
             [hiccup.core :refer :all]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [ring.util.response :refer [response]]
-            [next.jdbc :as jdbc]))
+            [next.jdbc :as jdbc]
+            [next.jdbc.result-set :as rs]))
 
 ;; TODO: make a multi-file project
 
@@ -72,11 +73,29 @@
                  [:script {:src "https://cdn.rawgit.com/cozmo/jsQR/master/dist/jsQR.js"}]
                  [:script {:src "/js/app.js" :type "text/javascript"}]]]))
 
-(defn logger-page []
-  (render-page "Logger"
-               ""))
+(defn get-all-logs [db]
+  (jdbc/execute! db ["SELECT * FROM logger ORDER BY log_date_time DESC"] {:builder-fn rs/as-unqualified-lower-maps}))
 
-;; (use 'ring.util.anti-forgery)
+(defn logger-page []
+  (def db (get-connection))
+  (let [logs (get-all-logs db)]
+    (render-page "Logger"
+                 [:div
+                  [:link {:rel "stylesheet"
+                          :type "text/css"
+                          :href "/css/logger.css"}]
+                  [:table
+                   [:thead
+                    [:tr
+                     [:th "ID"]
+                     [:th "Date"]
+                     [:th "Data"]]]
+                   [:tbody
+                    (for [log logs]
+                      [:tr
+                       [:td (:log_id log)]
+                       [:td (:log_date_time log)]
+                       [:td (:log_data log)]])]]])))
 
 (defn qr-page []
   (render-page "QR generator"
@@ -136,6 +155,5 @@
 
 (defn -main []
   (let [port 3000]
-    (get-connection)
     (jetty/run-jetty app {:port port})))
 
