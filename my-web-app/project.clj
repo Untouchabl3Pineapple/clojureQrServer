@@ -10,7 +10,9 @@
                  [com.nopolabs/clozxing "0.1.1"]
                  [org.clojure/clojurescript "1.11.54"]
                  [hiccup "1.0.5"]
-                 [ring/ring-anti-forgery "1.3.0"]]
+                 [ring/ring-anti-forgery "1.3.0"]
+                 [com.github.seancorfield/next.jdbc "1.3.883"]
+                 [org.postgresql/postgresql "42.2.10"]]
   :plugins [[lein-cljsbuild "1.1.7"]]
   :cljsbuild
   {:builds

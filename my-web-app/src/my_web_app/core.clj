@@ -7,9 +7,21 @@
             [com.nopolabs.clozxing.decode :as decode]
             [hiccup.core :refer :all]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
-            [ring.util.response :refer [response]]))
+            [ring.util.response :refer [response]]
+            [next.jdbc :as jdbc]))
 
 ;; TODO: make a multi-file project
+
+(def db-params
+  {:dbtype   "postgresql"
+   :dbname   "postgres"
+   :user     "postgres"
+   :password "17009839"
+   :host     "localhost"
+   :port     5432})
+
+(defn get-connection []
+  (jdbc/get-datasource db-params))
 
 (defn render-page [title content]
   (hiccup.core/html
@@ -23,7 +35,7 @@
      [:nav
       [:ul.nav-list
        [:li.nav-item [:a {:href "/home"} "Home"]]
-       [:li.nav-item [:a {:href "/scanner"} "Online scanner"]]
+       [:li.nav-item [:a {:href "/scanner"} "QR scanner"]]
        [:li.nav-item [:a {:href "/qrgenerator"} "QR code generator"]]
        [:li.nav-item [:a {:href "/logger"} "Logger"]]]]
      [:div.login-button-container
@@ -102,9 +114,10 @@
                             :type "text/css"
                             :href "/css/qrres.css"}]
                     [:h1 "QR code generated"]
-                    [:h2 (str "Encode message: " text)]
+
                     [:img {:src (str "/qrcodes/" unique-filename)
-                           :alt "QR Code"}]]))))
+                           :alt "QR Code"}]
+                    [:h2 (str "Encode message: " text)]]))))
 
 
 (defroutes app-routes
@@ -123,5 +136,6 @@
 
 (defn -main []
   (let [port 3000]
-    (jetty/run-jetty app {:port port})
-    (println (str "Server started on port " port))))
+    (get-connection)
+    (jetty/run-jetty app {:port port})))
+
