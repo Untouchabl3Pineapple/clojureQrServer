@@ -1,0 +1,57 @@
+/* Стили для основного контейнера */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Стили для заголовка */
+  h1 {
+    color: #333;
+  }
+  
+  /* Стили для видео */
+  #qr-video {
+    width: 400px;
+    height: 300px;
+    margin: 20px auto;
+    display: block;
+    border: 5px solid #000000;
+    background-color: #fff;
+  }
+  
+  /* Стили для вывода результата сканирования */
+  #qr-result {
+    font-size: 18px;
+    color: #333;
+    margin-top: 10px;
+  }
+  
+  /* Стили для скрипта */
+  #qr-result::before {
+    content: "Scan result: ";
+    font-weight: bold;
+  }
+  
+  /* Стили для сканирования */
+  #qr-result.scanning::before {
+    content: "Scanning... ";
+  }
+  
+  /* Стили для кнопки */
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  

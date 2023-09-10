@@ -31,7 +31,37 @@
     [:main content]]))
 
 (defn home-page []
-  (render-page "Home"
+  (render-page "QR Code Encoder & Decoder"
+               [:div.container
+                [:link {:rel "stylesheet"
+                        :type "text/css"
+                        :href "/css/home.css"}]
+                [:h1 "Welcome to the QR Code Encoder & Decoder"]
+                [:p "Encode and decode QR codes online with ease."]
+                [:div.instructions
+                 [:h2 "How to Use"]
+                 [:p "To encode a message into a QR code, visit the 'Encode' page."]
+                 [:p "To decode a QR code and retrieve the original message, visit the 'Decode' page."]]
+                [:div.get-started
+                 [:a {:href "/qrgenerator" :class "button"} "Encode QR Code"]
+                 [:a {:href "/scanner" :class "button"} "Decode QR Code"]]]))
+
+
+(defn scanner-page []
+  (render-page "Online scanner"
+               [:main
+                [:link {:rel "stylesheet"
+                        :type "text/css"
+                        :href "/css/scanner.css"}]
+                [:body
+                 [:h1 "Show your QR code"]
+                 [:video {:id "qr-video" :width 300 :height 300 :autoplay true}]
+                 [:p {:id "qr-result"} "QR Code value will appear here after scanning"]
+                 [:script {:src "https://cdn.rawgit.com/cozmo/jsQR/master/dist/jsQR.js"}]
+                 [:script {:src "/js/app.js" :type "text/javascript"}]]]))
+
+(defn logger-page []
+  (render-page "Logger"
                ""))
 
 ;; (use 'ring.util.anti-forgery)
@@ -79,10 +109,11 @@
 
 (defroutes app-routes
   (GET "/home" [] (home-page))
+  (GET "/scanner" [] (scanner-page))
+  (GET "/logger" [] (logger-page))
+
   (GET "/qrgenerator" [] (qr-page))
   (POST "/qrgenerator" [text] (qr-generator text)))
-  ;; (GET "/qrgenerator/:text" [text] (qr-generator text)))
-  ;; (GET "/scanner" [] (scanner-page))
 
 
 (def app
