@@ -34,13 +34,14 @@
 (defn scanner-page []
   (render-page "Online scanner"
                [:main
+                (anti-forgery-field)
                 [:link {:rel "stylesheet"
                         :type "text/css"
                         :href "/css/scanner.css"}]
                 [:body
                  [:h1 "Show your QR code"]
                  [:video {:id "qr-video" :width 300 :height 300 :autoplay true}]
-                 [:p {:id "qr-result"} "QR Code value will appear here after scanning"]
+                 [:p {:id "qr-result"} "QR Code not found"]
                  [:script {:src "https://cdn.rawgit.com/cozmo/jsQR/master/dist/jsQR.js"}]
                  [:script {:src "/js/app.js" :type "text/javascript"}]]]))
 

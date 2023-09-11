@@ -91,6 +91,9 @@
   (GET "/login" [] login-handler)
   (GET "/logout" [] logout-handler)
   (POST "/login" [] cas/cas-auth)
+
+  (POST "/hi" [qrData] (str qrData))
+
   (GET "/qrgenerator" [] (pages/qr-page))
   (POST "/qrgenerator" [text] (qr-generator text)))
 
