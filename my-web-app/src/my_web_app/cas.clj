@@ -23,7 +23,7 @@
       (let [token (generate-token)
             ]
         (reset! global-token token))))
-    (if (= 1 1)
+    (if (= 1 1) ;простите
     (reset! global-log-in-out "Logout")) ;под вопросом
      (responses/redirect "/home" 302)
     

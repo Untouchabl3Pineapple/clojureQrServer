@@ -5,24 +5,31 @@
            [ring.util.anti-forgery :refer [anti-forgery-field]] 
            [my-web-app.cas :as cas]
            ))
+
 (defn render-page [title content]
   (hiccup.core/html
-   [:head
-    [:title title]
-    [:link {:rel "stylesheet"
-            :type "text/css"
-            :href "/css/header.css"}]]
-   [:body
-    [:header.header
-     [:nav
-      [:ul.nav-list
-       [:li.nav-item [:a {:href "/home"} "Home"]]
-       [:li.nav-item [:a {:href "/scanner"} "QR scanner"]]
-       [:li.nav-item [:a {:href "/qrgenerator"} "QR code generator"]]
-       [:li.nav-item [:a {:href "/logger"} "Logger"]]]]
-     [:div.login-button-container
-      [:a.login-button {:href "/login"} (deref cas/global-log-in-out)]]]
-    [:main content]]))
+         [:head
+          [:title title]
+          [:link {:rel "stylesheet"
+                  :type "text/css"
+                  :href "/css/header.css"}]]
+         [:body
+          [:header.header
+           [:nav
+            [:ul.nav-list
+             [:li.nav-item [:a {:href "/home"} "Home"]]
+             [:li.nav-item [:a {:href "/scanner"} "QR scanner"]]
+             [:li.nav-item [:a {:href "/qrgenerator"} "QR code generator"]]
+             (if (cas/verify-token (deref cas/global-token))
+               [:li.nav-item [:a {:href "/logger"} "Logger"]]
+               )
+             ]]
+           [:div.login-button-container
+            [:a.login-button {:href "/login"} (deref cas/global-log-in-out)]]]
+          [:main content]])
+    
+  )
+
 
 (defn scanner-page []
   (render-page "Online scanner"
