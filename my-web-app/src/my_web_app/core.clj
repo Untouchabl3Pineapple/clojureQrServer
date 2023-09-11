@@ -40,9 +40,8 @@
 (defn logger-handler [req]
   (if (cas/verify-token (str (deref cas/global-token)))
     (
-     (reset! cas/global-token "null") ;под вопросом
-     (def db (get-connection))
-     (let [logs (get-all-logs db)]
+     (let [db (get-connection)
+           logs (get-all-logs db)]
        (pages/logger-page logs)))
     (responses/illegal-token)
     )
