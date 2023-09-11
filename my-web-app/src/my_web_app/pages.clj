@@ -116,20 +116,22 @@
 
 (defn login-page []
   (hiccup.core/html
-   [:h2 "Login"]
+   [:link {:rel "stylesheet"
+           :type "text/css"
+           :href "/css/auth.css"}]
    [:form {:method "POST" :action "/login"}
     (anti-forgery-field)
     (if (= 1 (deref cas/global-login-err))
       (do
         (reset! cas/global-login-err 0)
-        [:h3 "Incorrect login. Try again"]
+        [:h3 "[!] Incorrect login, try again"]
         )
       )
     ;
-    [:label {:for "login"} "login: "]
+    [:label {:for "login"} "Login: "]
     [:input {:type "text" :name "login"}]
     [:br]
-    [:label {:for "password"} "password: "]
+    [:label {:for "password"} "Password: "]
     [:input {:type "password" :name "password"}]
     [:br]
     [:input {:type "submit" :value "login"}]]))
