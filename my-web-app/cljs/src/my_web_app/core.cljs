@@ -8,7 +8,7 @@
 (defn handleQRCodeScan
   [result]
   (js/console.log antiForgeryToken)
-  (js/fetch "/hi"
+  (js/fetch "/log"
             #js
              {:method "POST"
               :headers #js {"Content-Type" "application/x-www-form-urlencoded", "X-CSRF-Token" antiForgeryToken}

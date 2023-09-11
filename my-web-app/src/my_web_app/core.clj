@@ -28,25 +28,19 @@
 (defn get-connection []
   (jdbc/get-datasource db-params))
 
-
-
 ;(def global-token (atom "string")) мб вернуть
-
 
 
 (defn get-all-logs [db]
   (jdbc/execute! db ["SELECT * FROM logger ORDER BY log_date_time DESC"] {:builder-fn rs/as-unqualified-lower-maps}))
 
 (defn logger-handler [req]
-  (if (cas/verify-token (str (deref cas/global-token))) 
-     (let [db (get-connection)
-           logs (get-all-logs db)]
-       (pages/logger-page logs)
-       ) 
-    (responses/illegal-token)
-    )
-)
-  
+  (if (cas/verify-token (str (deref cas/global-token)))
+    (let [db (get-connection)
+          logs (get-all-logs db)]
+      (pages/logger-page logs))
+    (responses/illegal-token)))
+
 
 
 (defn qr-generator [text]
@@ -68,20 +62,22 @@
 
 
 (defn home-handler [request]
-  (pages/home-page)
-  )
+  (pages/home-page))
 
-(defn login-handler [request] 
-  (if (= 1 1) 
-     (cas/reset-all)
-    
-    )
+(defn login-handler [request]
+  (if (= 1 1)
+    (cas/reset-all))
   (pages/layout (pages/login-page)))
 
 (defn logout-handler [request]
   (if (= 1 1)
     (cas/reset-all))
   (responses/redirect "/home" 302))
+
+(defn insert-log [data]
+  (jdbc/execute! (get-connection) [(str "INSERT INTO logger(log_date_time, log_data) VALUES (CURRENT_TIMESTAMP, '" data "')")])
+  (hiccup.core/html
+   data))
 
 
 (defroutes app-routes
@@ -92,7 +88,7 @@
   (GET "/logout" [] logout-handler)
   (POST "/login" [] cas/cas-auth)
 
-  (POST "/hi" [qrData] (str qrData))
+  (POST "/log" [qrData] (insert-log qrData))
 
   (GET "/qrgenerator" [] (pages/qr-page))
   (POST "/qrgenerator" [text] (qr-generator text)))
