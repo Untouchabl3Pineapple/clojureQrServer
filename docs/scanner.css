@@ -1,0 +1,36 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  margin-top: 50px;
+  color: #333;
+}
+
+#qr-video {
+  width: 400px;
+  height: 300px;
+  margin: 20px auto;
+  display: block;
+  border: 5px solid #000000;
+  background-color: #fff;
+}
+
+#qr-result {
+  font-size: 18px;
+  color: #333;
+  margin-top: 20px;
+}
+
+#qr-result::before {
+  content: "Scan result: ";
+  font-weight: bold;
+}
+
+#qr-result.scanning::before {
+  content: "Scanning... ";
+}
