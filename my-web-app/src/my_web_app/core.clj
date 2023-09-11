@@ -71,23 +71,26 @@
 (defn home-handler [request]
   (pages/home-page)
   )
-(defn reset-all[]
-  (reset! cas/global-log-in-out "Login")
-  (reset! cas/global-token "null")
-  )
+
 (defn login-handler [request] 
-  (if (= 1 1)
-    (
-     reset-all
-    )
+  (if (= 1 1) 
+     (cas/reset-all)
+    
     )
   (pages/layout (pages/login-page)))
+
+(defn logout-handler [request]
+  (if (= 1 1)
+    (cas/reset-all))
+  (responses/redirect "/home" 302))
+
 
 (defroutes app-routes
   (GET "/home" [] home-handler)
   (GET "/scanner" [] (pages/scanner-page))
   (GET "/logger" [] logger-handler)
   (GET "/login" [] login-handler)
+  (GET "/logout" [] logout-handler)
   (POST "/login" [] cas/cas-auth)
   (GET "/qrgenerator" [] (pages/qr-page))
   (POST "/qrgenerator" [text] (qr-generator text)))
