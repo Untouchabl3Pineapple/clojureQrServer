@@ -55,12 +55,12 @@
                    [:th "Date"]
                    [:th "Data"]]]
                  [:tbody
-                  ;(if (seq logs)
-                   ; (for [log logs]
-                    ;  [:tr
-                     ;  [:td (:log_id log)]
-                      ; [:td (:log_date_time log)]
-                       ;[:td (:log_data log)]])
+                  (if (seq logs)
+                    (for [log logs]
+                      [:tr
+                       [:td (:log_id log)]
+                       [:td (:log_date_time log)]
+                       [:td (:log_data log)]]))
                  ;   )
                  ]]]))
 
@@ -119,6 +119,13 @@
    [:h2 "Login"]
    [:form {:method "POST" :action "/login"}
     (anti-forgery-field)
+    (if (= 1 (deref cas/global-login-err))
+      (do
+        (reset! cas/global-login-err 0)
+        [:h3 "Incorrect login. Try again"]
+        )
+      )
+    ;
     [:label {:for "login"} "login: "]
     [:input {:type "text" :name "login"}]
     [:br]

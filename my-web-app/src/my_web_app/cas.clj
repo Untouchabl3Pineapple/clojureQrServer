@@ -21,6 +21,7 @@
 (def global-token (atom "string"))
 (def global-log-in-out (atom "Login"))
 (def global-login-route (atom "/login"))
+(def global-login-err (atom 0))
 
 (defn reset-all []
   (reset! global-log-in-out "Login")
@@ -61,4 +62,7 @@
         (responses/redirect "/home" 302))
       ;else
       ;(response/content-type (response/response "incorrect login or password") "text/html")
-      (incorrect-login-page))))
+      (do 
+           (reset! global-login-err 1)
+           (responses/redirect "/login" 302)
+      ))))
