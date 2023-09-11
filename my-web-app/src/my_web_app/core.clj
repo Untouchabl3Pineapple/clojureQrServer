@@ -21,7 +21,7 @@
   {:dbtype   "postgresql"
    :dbname   "postgres"
    :user     "postgres"
-   :password "17009839"
+   :password "12345"
    :host     "localhost"
    :port     5432})
 
@@ -38,11 +38,11 @@
   (jdbc/execute! db ["SELECT * FROM logger ORDER BY log_date_time DESC"] {:builder-fn rs/as-unqualified-lower-maps}))
 
 (defn logger-handler [req]
-  (if (cas/verify-token (str (deref cas/global-token)))
-    (
+  (if (cas/verify-token (str (deref cas/global-token))) 
      (let [db (get-connection)
            logs (get-all-logs db)]
-       (pages/logger-page logs)))
+       (pages/logger-page logs)
+       ) 
     (responses/illegal-token)
     )
 )

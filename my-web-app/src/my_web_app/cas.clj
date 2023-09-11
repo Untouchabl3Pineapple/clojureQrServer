@@ -3,8 +3,21 @@
 
    [my-web-app.responses :as responses]
    [ring.util.response :as response]
+   [ring.util.anti-forgery :refer [anti-forgery-field]]
    ;[my-web-app.core :as core]
    ))
+
+
+
+(defn incorrect-login-page []
+  (hiccup.core/html
+   [:h2 "Incorrect Login"]
+   [:form
+    (anti-forgery-field)]))
+
+
+
+
 (def global-token (atom "string"))
 (def global-log-in-out (atom "Login"))
 (def global-login-route (atom "/login"))
@@ -28,15 +41,11 @@
           (user-login-validation login password))
     (do
       (if (admin-login-validation login password)
-        (reset! global-token (generate-token))
-        )
-      
-       true
-      )
-     
-    false
-    )
-  )
+        (reset! global-token (generate-token)))
+
+      true)
+
+    false))
 
 
 (defn cas-auth [request]
@@ -49,11 +58,7 @@
       (do
         (reset! global-log-in-out "Logout")
         (reset! global-login-route "/logout")
-        (responses/redirect "/home" 302)
-       )
+        (responses/redirect "/home" 302))
       ;else
-      (response/content-type (response/response "incorrect login or password") "text/html")
-        
-      )
-    )
-  )
+      ;(response/content-type (response/response "incorrect login or password") "text/html")
+      (incorrect-login-page))))
