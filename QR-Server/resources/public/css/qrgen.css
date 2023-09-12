@@ -1,0 +1,52 @@
+.qr-generator {
+    max-width: 400px;
+    margin: 200 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.qr-generator h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.qr-generator form {
+    margin: 0;
+}
+
+.qr-generator label {
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #000000;
+    font-weight: bold;
+}
+
+.qr-generator input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.qr-generator button[type="submit"] {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.qr-generator button[type="submit"]:hover {
+    background-color: #0056b3;
+}
