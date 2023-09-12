@@ -6,14 +6,11 @@
    ;[QR-Server.core :as core]
    ))
 
-
-
 (defn incorrect-login-page []
   (hiccup.core/html
    [:h2 "Incorrect Login"]
    [:form
     (anti-forgery-field)]))
-
 
 (defn illegal-token []
   (response/content-type (response/not-found "Illegal token ") "text/plain"))
@@ -21,8 +18,6 @@
 (defn redirect [redirect-url status]
   {:status status
    :headers {"location" redirect-url}})
-
-
 
 (def global-token (atom "string"))
 (def global-log-in-out (atom "Login"))

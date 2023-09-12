@@ -40,7 +40,7 @@
                  [:video {:id "qr-video" :width 300 :height 300 :autoplay true}]
                  [:p {:id "qr-result"} "QR Code not found"]
                  [:script {:src "https://cdn.rawgit.com/cozmo/jsQR/master/dist/jsQR.js"}]
-                 [:script {:src "/js/app.js" :type "text/javascript"}]]]))
+                 [:script {:src "/js/scanner.js" :type "text/javascript"}]]]))
 
 (defn logger-page [logs]
   (render-page "Logger"

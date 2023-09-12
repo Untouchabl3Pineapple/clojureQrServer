@@ -17,7 +17,7 @@
   :cljsbuild
   {:builds
    [{:id "cljs"
-     :source-paths ["cljs/src/QRserver"]
+     :source-paths ["cljs/src/QR_server"]
      :compiler {:output-to "resources/public/js/scanner.js"
                 :optimizations :advanced
                 :pretty-print false}}]}

@@ -4,6 +4,7 @@
             [next.jdbc :as jdbc]
             [next.jdbc.result-set :as rs]
             ))
+
 (def db-type
   "postgresql")
 (def db-name
@@ -14,6 +15,7 @@
   "12345")
   (def db-host
     "localhost")
+
 (def db-port
   5432)
 (def db-params
