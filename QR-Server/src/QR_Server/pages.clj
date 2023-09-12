@@ -5,6 +5,7 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [QR-Server.auth :as cas]))
 
+
 (defn render-page [title content]
   (hiccup.core/html
    [:head
@@ -42,6 +43,7 @@
                  [:script {:src "https://cdn.rawgit.com/cozmo/jsQR/master/dist/jsQR.js"}]
                  [:script {:src "/js/scanner.js" :type "text/javascript"}]]]))
 
+
 (defn logger-page [logs]
   (render-page "Logger"
                [:div
@@ -64,6 +66,7 @@
                  ;   )
                   ]]]))
 
+
 (defn qr-generator-page [unique-filename text]
   (render-page "QR Code Page"
                [:main
@@ -75,6 +78,7 @@
                 [:img {:src (str "/qrcodes/" unique-filename)
                        :alt "QR Code"}]
                 [:h2 (str "Encode message: " text)]]))
+
 
 (defn qr-page []
   (render-page "QR generator"
@@ -92,6 +96,7 @@
                           :id "qr-text"}]
                  [:button {:type "submit"} "Encode"]]]))
 
+
 (defn home-page []
   (render-page "QR Code Encoder & Decoder"
                [:div.container
@@ -108,11 +113,13 @@
                  [:a {:href "/qrgenerator" :class "button"} "Encode QR Code"]
                  [:a {:href "/scanner" :class "button"} "Decode QR Code"]]]))
 
+
 (defn layout [content]
   (hiccup.core/html
    [:html
     [:head [:title "Authentication Example"]]
     [:body content]]))
+
 
 (defn login-page []
   (hiccup.core/html

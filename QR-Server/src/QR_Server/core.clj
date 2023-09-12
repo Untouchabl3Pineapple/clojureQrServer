@@ -10,14 +10,12 @@
             [QR-Server.db :as db]
             [QR-Server.routes :as routes]))
 
-;; TODO: make a multi-file project
-
-
 
 (def app
   (-> routes/app-routes
       (wrap-defaults site-defaults)
       (wrap-reload {:dirs ["src"]})))
+
 
 (defn -main []
   (let [port 3000]

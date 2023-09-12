@@ -5,13 +5,14 @@
             [QR-Server.pages :as pages]
             [QR-Server.auth :as cas]
             [QR-Server.db :as db]))
+
+
 (defn logger-handler [req]
   (if (cas/verify-token (str (deref cas/global-token)))
     (let [db (db/get-connection)
           logs (db/get-all-logs db)]
       (pages/logger-page logs))
     (cas/illegal-token)))
-
 
 
 (defn qr-generator [text]
@@ -31,14 +32,15 @@
       (pages/qr-generator-page unique-filename text))))
 
 
-
 (defn home-handler [request]
   (pages/home-page))
+
 
 (defn login-handler [request]
   (if (= 1 1)
     (cas/reset-all))
   (pages/layout (pages/login-page)))
+
 
 (defn logout-handler [request]
   (if (= 1 1)

@@ -5,6 +5,7 @@
             [next.jdbc.result-set :as rs]
             ))
 
+
 (def db-type
   "postgresql")
 (def db-name
@@ -15,9 +16,10 @@
   "12345")
   (def db-host
     "localhost")
-
 (def db-port
   5432)
+
+
 (def db-params
   {:dbtype   db-type
    :dbname   db-name
@@ -26,10 +28,12 @@
    :host     db-host
    :port     db-port})
 
+
 (defn get-connection []
   (jdbc/get-datasource db-params))
 
-;(def global-token (atom "string")) мб вернуть
+
+;(def global-token (atom "string"))
 
 
 (defn get-all-logs [db]
