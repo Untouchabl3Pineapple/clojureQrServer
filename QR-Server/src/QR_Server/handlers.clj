@@ -1,10 +1,11 @@
 (ns QR-Server.handlers
-  (:require 
-            [com.nopolabs.clozxing.encode :as encode]
-            [hiccup.core :refer :all]
-            [QR-Server.pages :as pages]
-            [QR-Server.auth :as cas]
-            [QR-Server.db :as db]))
+  (:require
+   [com.nopolabs.clozxing.encode :as encode]
+   [hiccup.core :refer :all]
+   [clojure.java.io :as io]
+   [QR-Server.pages :as pages]
+   [QR-Server.auth :as cas]
+   [QR-Server.db :as db]))
 
 
 (defn logger-handler [req]
@@ -15,11 +16,18 @@
     (cas/illegal-token)))
 
 
+(defn ensure-qrcodes-directory []
+  (let [qrcodes-dir "resources/public/qrcodes"]
+    (if (not (.exists (io/file qrcodes-dir)))
+      (.mkdirs (io/file qrcodes-dir)))))
+
+
 (defn qr-generator [text]
   (if (empty? text)
     (pages/qr-page)
     (let [unique-filename (str (java.util.UUID/randomUUID) ".png")
           file-path (str "resources/public/qrcodes/" unique-filename)]
+      (ensure-qrcodes-directory)
       (encode/to-file
        text
        file-path
