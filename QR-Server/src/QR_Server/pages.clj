@@ -131,7 +131,7 @@
     (if (= 1 (deref cas/global-login-err))
       (do
         (reset! cas/global-login-err 0)
-        [:h3 "[!] Incorrect login, try again"]))
+        [:h3 "[!] Incorrect data, try again"]))
     ;
     [:label {:for "login"} "Login: "]
     [:input {:type "text" :name "login"}]
