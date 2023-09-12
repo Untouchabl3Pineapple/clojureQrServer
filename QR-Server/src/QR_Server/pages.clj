@@ -3,7 +3,7 @@
 
    [hiccup.core :refer :all]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
-   [QR-Server.cas :as cas]))
+   [QR-Server.auth :as cas]))
 
 (defn render-page [title content]
   (hiccup.core/html
@@ -62,7 +62,7 @@
                        [:td (:log_date_time log)]
                        [:td (:log_data log)]]))
                  ;   )
-                 ]]]))
+                  ]]]))
 
 (defn qr-generator-page [unique-filename text]
   (render-page "QR Code Page"
@@ -124,9 +124,7 @@
     (if (= 1 (deref cas/global-login-err))
       (do
         (reset! cas/global-login-err 0)
-        [:h3 "[!] Incorrect login, try again"]
-        )
-      )
+        [:h3 "[!] Incorrect login, try again"]))
     ;
     [:label {:for "login"} "Login: "]
     [:input {:type "text" :name "login"}]

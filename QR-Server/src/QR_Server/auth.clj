@@ -1,10 +1,9 @@
-(ns QR-Server.cas
+(ns QR-Server.auth
   (:require
 
-   [QR-Server.responses :as responses]
    [ring.util.response :as response]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
-   ;[my-web-app.core :as core]
+   ;[QR-Server.core :as core]
    ))
 
 
@@ -15,6 +14,13 @@
    [:form
     (anti-forgery-field)]))
 
+
+(defn illegal-token []
+  (response/content-type (response/not-found "Illegal token ") "text/plain"))
+
+(defn redirect [redirect-url status]
+  {:status status
+   :headers {"location" redirect-url}})
 
 
 
@@ -59,10 +65,9 @@
       (do
         (reset! global-log-in-out "Logout")
         (reset! global-login-route "/logout")
-        (responses/redirect "/home" 302))
+        (redirect "/home" 302))
       ;else
       ;(response/content-type (response/response "incorrect login or password") "text/html")
-      (do 
-           (reset! global-login-err 1)
-           (responses/redirect "/login" 302)
-      ))))
+      (do
+        (reset! global-login-err 1)
+        (redirect "/login" 302)))))
