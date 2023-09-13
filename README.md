@@ -80,3 +80,187 @@ lein run
 Пример попытки доступа к логгеру с неподходящим токеном:
 
 ![ввод строки для кодирования](./docs/readme/wrong-logger-page.png)
+
+
+## Реализация
+
+### Точка входа в программу(main)
+
+```
+(def app
+  (-> routes/app-routes
+      (wrap-defaults site-defaults)
+      (wrap-reload {:dirs ["src"]})))
+
+
+(defn -main []
+  (let [port 3000]
+    (jetty/run-jetty app {:port port})))
+```
+
+В данном фрагменте кода представлен функция main, которая запускает веб-сервер на порте 3000 для обслуживания обработчика app. 
+### Роутер
+
+```
+(defroutes app-routes
+  (GET "/home" [] handlers/home-handler)
+  (GET "/scanner" [] (pages/scanner-page))
+  (GET "/logger" [] handlers/logger-handler)
+  (GET "/login" [] handlers/login-handler)
+  (GET "/logout" [] handlers/logout-handler)
+  (POST "/login" [] cas/cas-auth)
+
+  (POST "/log" [qrData] (db/insert-log qrData))
+
+  (GET "/qrgenerator" [] (pages/qr-page))
+  (POST "/qrgenerator" [text] (handlers/qr-generator text)))
+```
+В данном фрагменте кода представлен обработчик последовательности машртрутов. 
+Маршрут описан следующим образом: 
+* http-метод 
+* маршрут 
+* аргументы для функции-обработчика
+* функция обработчик 
+### Функции-обработчики
+
+```
+(defn logger-handler [req]
+    ...
+)
+
+
+
+(defn qr-generator [text]
+    ...
+)
+
+
+(defn home-handler [request]
+    ...
+)
+
+
+(defn login-handler [request]
+    ...  
+)
+
+
+(defn logout-handler [request]
+  
+)
+```
+В данном фрагменте кода представлены функции-обработчики машртрутов.
+
+
+### CAS-Авторизация
+
+```
+
+(defn verify-token [token]
+    ...
+)
+(defn verify-admin-token [token] 
+    ...
+)
+(defn- generate-token [login]
+  ) ; Генерируем токен
+(defn- admin-login-validation [login password]
+    ...
+)
+(defn- user-login-validation [login password]
+    ...
+)
+
+(defn- login-validation [login password]
+    ...
+)
+
+
+(defn- authentication [login password]
+    ...
+)
+
+
+(defn cas-auth [request]
+    ...
+)
+```
+В данном фрагменте кода представлена реализация cas-авторизации. 
+При попытке авторизации введенные пользователем данные передаются функции cas-auth.
+cas-auth передает данные функции, которая генерирует специальный токен.
+Далее токен возвращается и проверяется его валидность. 
+В случае валидности токена пользователь получает доступ к системе.
+
+### Взаимодействие с базой данных
+
+```
+(def db-params
+)
+
+
+(defn get-connection []
+)
+
+(defn get-all-logs [db]
+)
+
+
+(defn insert-log [data]
+)
+```
+В качестве СУБД была выбрана postgres.
+База данных используется для хранения логов, предоставляющих следующую информацию: id, время выполнения операции, оперируемая строка.
+
+### Страницы
+```
+(defn render-page [title content]
+    ...
+)
+
+
+(defn scanner-page []
+    ...
+)
+
+
+(defn logger-page [logs]
+    ...
+)
+
+
+(defn qr-generator-page [unique-filename text]
+    ...
+)
+
+
+(defn qr-page []
+    ...
+)
+
+
+(defn home-page []
+    ...
+)
+
+
+(defn layout [content]
+    ...
+)
+```
+
+В данном фрагменте кода предоставлены html-страницы.
+
+### Используемые библиотеки
+
+Были использованы следующие библиотеки:
+
+* hiccup.core - рендеринг дерева векторов в строку HTML.
+* ring.util.anti-forgery - служебные функции для вставки токенов защиты от подделки в HTML-формы.
+* next.jdbc - обертка Clojure низкого уровня для доступа к базам данных на основе JDBC
+* com.nopolabs.clozxing.encode - функции, реализующие кодирование и декодирование QR-кодов
+* clojure.java.io - полиморфные служебные функции ввода-вывода для Clojure
+* ring.util.response - функции для создания и дополнения response maps.
+* compojure.core - функции и макросы для построения маршрутов и их объединения в более сложные функции
+* ring.adapter.jetty - адаптер Ring, использующий встроенный веб-сервер Jetty 9. Адаптеры используются для преобразования обработчиков Ring в работающие веб-серверы.
+* ring.middleware.defaults - функции для предоставления обработчику значений по умолчанию.
+* ring.middleware.reload - функции, которые перезагружают измененные пространства имен при каждом запросе.
