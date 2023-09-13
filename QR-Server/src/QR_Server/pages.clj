@@ -22,7 +22,7 @@
        [:li.nav-item [:a {:href "/qrgenerator"} "QR code generator"]]
 
 
-       (if (cas/verify-token (deref cas/global-token))
+       (if (cas/verify-admin-token (deref cas/global-token))
          [:li.nav-item [:a {:href "/logger"} "Logger"]])]]
      [:div.login-button-container
       [:a.login-button {:href (deref cas/global-login-route)} (deref cas/global-log-in-out)]]];(if (= (deref cas/global-log-in-out) "Logout") (do (cas/reset-all) "/home") "/login")

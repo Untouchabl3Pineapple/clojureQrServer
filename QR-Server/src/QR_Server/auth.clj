@@ -34,35 +34,43 @@
   (reset! global-token "null")
   (reset! global-login-route "/login"))
 
-
 (defn verify-token [token]
-  (= token "valid_token")) ; Проверяем, является ли токен действительным
-(defn- generate-token []
-  (str "valid_token")) ; Генерируем случайный токен (str (rand-int 1000000))
+  (or
+   (= token "user_valid_token")
+   (= token "admin_valid_token"))) ; Проверяем, является ли токен действительным
+(defn verify-admin-token [token] 
+   (= token "admin_valid_token"))
+(defn- generate-token [login]
+  (str login "_" "valid_token")) ; Генерируем случайный токен (str (rand-int 1000000))
 (defn- admin-login-validation [login password]
   (and (= login "admin") (= password "admin")))
 (defn- user-login-validation [login password]
   (and (= login "user") (= password "user")))
 
-
 (defn- login-validation [login password]
   (if (or (admin-login-validation login password)
           (user-login-validation login password))
-    (do
-      (if (admin-login-validation login password)
-        (reset! global-token (generate-token)))
-      true)
+
+
+    true
     false))
+
+(defn- authentication [login password]
+  (if (login-validation login password)
+    (generate-token login)
+    (generate-token "invalid")))
 
 
 (defn cas-auth [request]
   (let [params (get-in request [:params])
         login (get params :login)
-        password (get params :password)]
+        password (get params :password)
+        token (authentication login password)]
        ;; Проверка логина и пароля и генерация токена (пока упрощенно)
-    (if (login-validation login password)
+    (if (verify-token token)
       ;then
       (do
+        (reset! global-token token)
         (reset! global-log-in-out "Logout")
         (reset! global-login-route "/logout")
         (redirect "/home" 302))

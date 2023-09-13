@@ -9,7 +9,7 @@
 
 
 (defn logger-handler [req]
-  (if (cas/verify-token (str (deref cas/global-token)))
+  (if (cas/verify-admin-token (str (deref cas/global-token)))
     (let [db (db/get-connection)
           logs (db/get-all-logs db)]
       (pages/logger-page logs))
