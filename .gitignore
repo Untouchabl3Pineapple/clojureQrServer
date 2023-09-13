@@ -13,4 +13,4 @@ pom.xml.asc
 .hg/
 .DS_Store
 *.png
-!docs/*.png
+!/.docs/readme*.png
