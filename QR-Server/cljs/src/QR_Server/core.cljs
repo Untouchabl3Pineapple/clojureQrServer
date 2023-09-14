@@ -7,7 +7,6 @@
 
 (defn handleQRCodeScan
   [result]
-  (js/console.log antiForgeryToken)
   (js/fetch "/log"
             #js
              {:method "POST"

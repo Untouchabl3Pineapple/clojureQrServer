@@ -1,10 +1,7 @@
 (ns QR-Server.auth
   (:require
-
    [ring.util.response :as response]
-   [ring.util.anti-forgery :refer [anti-forgery-field]]
-   ;[QR-Server.core :as core]
-   ))
+   [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
 
 (defn incorrect-login-page []
@@ -34,12 +31,13 @@
   (reset! global-token "null")
   (reset! global-login-route "/login"))
 
+
 (defn verify-token [token]
   (or
    (= token "user_valid_token")
    (= token "admin_valid_token"))) ; Проверяем, является ли токен действительным
-(defn verify-admin-token [token] 
-   (= token "admin_valid_token"))
+(defn verify-admin-token [token]
+  (= token "admin_valid_token"))
 (defn- generate-token [login]
   (str login "_" "valid_token")) ; Генерируем случайный токен (str (rand-int 1000000))
 (defn- admin-login-validation [login password]
@@ -50,10 +48,9 @@
 (defn- login-validation [login password]
   (if (or (admin-login-validation login password)
           (user-login-validation login password))
-
-
     true
     false))
+
 
 (defn- authentication [login password]
   (if (login-validation login password)

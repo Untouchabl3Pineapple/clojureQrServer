@@ -1,7 +1,8 @@
 # QR Server
 Веб-приложение, предназначенное для кодирования и декодирования информации.
 
-Рабочий стенд для проверки сканирования: 
+[Рабочий стенд для проверки сканирования](https://untouchabl3pineapple.github.io/clojureQR-Stand/).
+
 
 
 ## Установка
@@ -109,118 +110,186 @@ lein run
 
 ```
 (defroutes app-routes
-  (GET "/home" [] handlers/home-handler)
+  (defroutes app-routes
+  (GET  "/home" [] (handlers/home-gethandler))
 
-  (GET "/scanner" [] (pages/scanner-page))
-  (GET "/logger" [] handlers/logger-handler)
-  (POST "/log" [qrData] (db/insert-log qrData))
+  (GET  "/scanner" [] (handlers/scanner-gethandler))
+  (GET  "/logger" [] (handlers/logger-gethandler))
+  (POST "/log" [qrData] (handlers/log-posthandler qrData))
 
-  (GET "/qrgenerator" [] (pages/qr-page))
-  (POST "/qrgenerator" [text] (handlers/qr-generator text))
-  
-  (GET "/login" [] handlers/login-handler)
-  (GET "/logout" [] handlers/logout-handler)
-  (POST "/login" [] cas/cas-auth))
+  (GET  "/qrgenerator" [] (handlers/qr-generator-gethandler))
+  (POST "/qrgenerator" [text] (handlers/qr-generator-posthandler text))
+
+  (GET  "/login" [] (handlers/login-gethandler))
+  (POST "/login" [] (handlers/login-posthandler))
+  (GET  "/logout" [] (handlers/logout-gethandler)))
 ```
 В данном фрагменте кода представлен обработчик последовательности машртрутов. 
 Маршрут описан следующим образом: 
 * http-метод 
 * маршрут 
 * аргументы для функции-обработчика
-* функция обработчик 
+* функция-обработчик 
 ### Функции-обработчики (handlers.clj)
 
 ```
-(defn logger-handler [req]
+(defn home-gethandler []
     ...
 )
 
 
-
-(defn qr-generator [text]
+(defn scanner-gethandler []
     ...
 )
 
 
-(defn home-handler [request]
+(defn logger-gethandler []
     ...
 )
 
 
-(defn login-handler [request]
-    ...  
+(defn log-posthandler [requestData]
+    ...
 )
 
 
-(defn logout-handler [request]
-  
+(defn qr-generator-gethandler []
+    ...
+)
+
+
+(defn qr-generator-posthandler [requestData]
+    ...
+)
+
+
+(defn login-gethandler []
+    ...
+)
+
+
+(defn login-posthandler []
+    ...
+)
+
+
+(defn logout-gethandler []
+    ...
 )
 ```
 В данном фрагменте кода представлены функции-обработчики машртрутов.
+
+В функции `qr-generator` была добавлена возможность автоматического сохранения сгенерированных QR-кодов на сервере. При необходимости этот функционал можно просто отключить. Сгенерированные изображения сохраняются в формате PNG и помещаются в папку `root/resources/public/qrcodes/`.
+
 
 
 ### CAS авторизация (auth.clj)
 
 ```
-
 (defn verify-token [token]
     ...
 )
+
 
 (defn verify-admin-token [token] 
     ...
 )
 
+
 (defn- generate-token [login]
+    ...
 )
+
 
 (defn- admin-login-validation [login password]
     ...
 )
 
+
 (defn- user-login-validation [login password]
     ...
 )
+
 
 (defn- login-validation [login password]
     ...
 )
 
+
 (defn- authentication [login password]
     ...
 )
+
 
 (defn cas-auth [request]
     ...
 )
 ```
 В данном фрагменте кода представлена реализация cas авторизации. 
-При попытке авторизации введенные пользователем данные передаются функции cas-auth.
-cas-auth передает данные функции, которая генерирует специальный токен.
-Далее токен возвращается и проверяется его валидность. 
-В случае валидности токена пользователь получает доступ к системе.
+
+При попытке авторизации введенные пользователем данные передаются функции cas-auth. Cas-auth передает данные функции, которая генерирует специальный токен. Далее токен возвращается и проверяется его валидность. В случае валидности токена пользователь получает доступ к системе.
 
 ### Взаимодействие с базой данных (db.clj)
 
 ```
 (def db-params
+    ...
 )
+
 
 (defn get-connection []
+    ...
 )
+
 
 (defn get-all-logs [db]
+    ...
 )
 
-(defn insert-log [data]
+
+(defn insert-log [db, data]
+    ...
 )
 ```
-В качестве СУБД была выбрана postgres.
+В качестве СУБД была выбрана PostgreSQL.
+
 База данных используется для хранения логов, предоставляющих следующую информацию: id, время выполнения операции, оперируемая строка.
+
+Создание сущности лежит в директории db:
+
+```
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+DROP TABLE IF EXISTS logger;
+
+CREATE TABLE IF NOT EXISTS logger
+(
+	log_id          UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+	log_date_time   TIMESTAMP WITH TIME ZONE NOT NULL,
+        log_data        TEXT NOT NULL
+);
+```
+
+Чтобы подключиться к БД, достаточно установить свои параметры в данные поля:
+
+```
+(def db-type
+  "postgresql")
+(def db-name
+  "postgres")
+(def db-user
+  "postgres")
+(def db-password
+  "12345")
+(def db-host
+  "localhost")
+(def db-port
+  5432)
+```
 
 ### Страницы (pages.clj)
 ```
-(defn render-page [title content]
+(defn main-layout [title content]
     ...
 )
 
@@ -250,12 +319,21 @@ cas-auth передает данные функции, которая генер
 )
 
 
-(defn layout [content]
+(defn login-layout [title, content]
+    ...
+)
+
+
+(defn login-page []
     ...
 )
 ```
 
 В данном фрагменте кода предоставлены html-страницы.
+
+### Взаимодействие с камерой (cljs/src/QR_Server/core.cljs)
+
+Взаимодействие с камерой производится за счет подключения библиотеки [jsQR](https://github.com/cozmo/jsQR).
 
 ### Используемые библиотеки
 
@@ -271,3 +349,4 @@ cas-auth передает данные функции, которая генер
 * ring.adapter.jetty - адаптер Ring, использующий встроенный веб-сервер Jetty 9. Адаптеры используются для преобразования обработчиков Ring в работающие веб-серверы.
 * ring.middleware.defaults - функции для предоставления обработчику значений по умолчанию.
 * ring.middleware.reload - функции, которые перезагружают измененные пространства имен при каждом запросе.
+* jsQR - библиотека чтения QR-кода на чистом JavaScript.

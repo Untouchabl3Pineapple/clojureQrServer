@@ -6,7 +6,7 @@
    [QR-Server.auth :as cas]))
 
 
-(defn render-page [title content]
+(defn main-layout [title content]
   (hiccup.core/html
    [:head
     [:title title]
@@ -26,12 +26,12 @@
          [:li.nav-item [:a {:href "/logger"} "Logger"]])]]
      [:div.login-button-container
       [:a.login-button {:href (deref cas/global-login-route)} (deref cas/global-log-in-out)]]];(if (= (deref cas/global-log-in-out) "Logout") (do (cas/reset-all) "/home") "/login")
-    [:main content]]))
+    content]))
 
 
 (defn scanner-page []
-  (render-page "Online scanner"
-               [:main
+  (main-layout "Online scanner"
+               [:div.container
                 (anti-forgery-field)
                 [:link {:rel "stylesheet"
                         :type "text/css"
@@ -45,7 +45,7 @@
 
 
 (defn logger-page [logs]
-  (render-page "Logger"
+  (main-layout "Logger"
                [:div
                 [:link {:rel "stylesheet"
                         :type "text/css"
@@ -68,8 +68,8 @@
 
 
 (defn qr-generator-page [unique-filename text]
-  (render-page "QR Code Page"
-               [:main
+  (main-layout "QR Code Page"
+               [:div.container
                 [:link {:rel "stylesheet"
                         :type "text/css"
                         :href "/css/qrres.css"}]
@@ -81,7 +81,7 @@
 
 
 (defn qr-page []
-  (render-page "QR generator"
+  (main-layout "QR generator"
                [:div.qr-generator
                 [:link {:rel "stylesheet"
                         :type "text/css"
@@ -98,7 +98,7 @@
 
 
 (defn home-page []
-  (render-page "QR Code Encoder & Decoder"
+  (main-layout "QR Code Encoder & Decoder"
                [:div.container
                 [:link {:rel "stylesheet"
                         :type "text/css"
@@ -114,30 +114,32 @@
                  [:a {:href "/scanner" :class "button"} "Decode QR Code"]]]))
 
 
-(defn layout [content]
+(defn login-layout [title, content]
   (hiccup.core/html
-   [:html
-    [:head [:title "Authentication Example"]]
-    [:body content]]))
+   [:head
+    [:title title]
+    [:link {:rel "stylesheet"
+            :type "text/css"
+            :href "/css/auth.css"}]]
+   [:body
+    content]))
 
 
 (defn login-page []
-  (hiccup.core/html
-   [:link {:rel "stylesheet"
-           :type "text/css"
-           :href "/css/auth.css"}]
-   [:form {:method "POST" :action "/login"}
-    (anti-forgery-field)
-    (if (= 1 (deref cas/global-login-err))
-      (do
-        (reset! cas/global-login-err 0)
-        [:h3 "[!] Incorrect data, try again"]))
-    ;
-    [:label {:for "login"} "Login: "]
-    [:input {:type "text" :name "login"}]
-    [:br]
-    [:label {:for "password"} "Password: "]
-    [:input {:type "password" :name "password"}]
-    [:br]
-    [:input {:type "submit" :value "login"}]]))
+  (login-layout "Authorization"
+                [:div.container
+                 [:form {:method "POST" :action "/login"}
+                  (anti-forgery-field)
+                  (if (= 1 (deref cas/global-login-err))
+                    (do
+                      (reset! cas/global-login-err 0)
+                      [:h3 "[!] Incorrect data, try again"]))
+               ;
+                  [:label {:for "login"} "Login: "]
+                  [:input {:type "text" :name "login"}]
+                  [:br]
+                  [:label {:for "password"} "Password: "]
+                  [:input {:type "password" :name "password"}]
+                  [:br]
+                  [:input {:type "submit" :value "login"}]]]))
 

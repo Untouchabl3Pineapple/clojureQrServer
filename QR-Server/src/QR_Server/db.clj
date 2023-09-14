@@ -1,9 +1,8 @@
 (ns QR-Server.db
-  (:require 
-            [hiccup.core :refer :all]
-            [next.jdbc :as jdbc]
-            [next.jdbc.result-set :as rs]
-            ))
+  (:require
+   [hiccup.core :refer :all]
+   [next.jdbc :as jdbc]
+   [next.jdbc.result-set :as rs]))
 
 
 (def db-type
@@ -14,8 +13,8 @@
   "postgres")
 (def db-password
   "12345")
-  (def db-host
-    "localhost")
+(def db-host
+  "localhost")
 (def db-port
   5432)
 
@@ -33,14 +32,11 @@
   (jdbc/get-datasource db-params))
 
 
-;(def global-token (atom "string"))
-
-
 (defn get-all-logs [db]
   (jdbc/execute! db ["SELECT * FROM logger ORDER BY log_date_time DESC"] {:builder-fn rs/as-unqualified-lower-maps}))
 
 
-(defn insert-log [data]
-  (jdbc/execute! (get-connection) [(str "INSERT INTO logger(log_date_time, log_data) VALUES (CURRENT_TIMESTAMP, '" data "')")])
+(defn insert-log [db, data]
+  (jdbc/execute! db [(str "INSERT INTO logger(log_date_time, log_data) VALUES (CURRENT_TIMESTAMP, '" data "')")])
   (hiccup.core/html
    data))
