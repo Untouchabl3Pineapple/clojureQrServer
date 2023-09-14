@@ -3,7 +3,7 @@
 (def video (.getElementById js/document "qr-video"))
 (def qrResult (.getElementById js/document "qr-result"))
 (def antiForgeryToken (.-value (js/document.querySelector "#__anti-forgery-token")))
-(def prevQRCode (atom nil)) ; Атом для хранения предыдущего QR-кода
+(def prevQRCode (atom nil))
 
 (defn handleQRCodeScan
   [result]
@@ -26,7 +26,6 @@
 (defn tick
   []
   (when (= (.-readyState video) (.-HAVE_ENOUGH_DATA video))
-    ;; (set! (.-textContent qrResult) "Scanning...")
     (def canvasElement (.createElement js/document "canvas"))
     (def canvas (.getContext canvasElement "2d"))
     (set! (.-width canvasElement) (.-videoWidth video))
