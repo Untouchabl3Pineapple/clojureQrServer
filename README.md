@@ -1,36 +1,41 @@
 # QR Server
 Веб-приложение, предназначенное для кодирования и декодирования информации.
 
+Рабочий стенд для проверки сканирования: 
+
 
 ## Установка
 
-1. Убедитесь, что у вас установлены Java Development Kit (JDK) и Leiningen. Если они не установлены, следуйте инструкциям на официальных веб-сайтах для их установки.
+1. Убедитесь, что у вас установлены **Java Development Kit (JDK)** и **Leiningen**. Если они не установлены, следуйте инструкциям на официальных веб-сайтах для их установки.
 
 2. Склонируйте репозиторий с сервером на свой компьютер:
 
-   
 ```
 git clone https://github.com/Untouchabl3Pineapple/clojureQrServer.git
 ```
-    
-
-   
 
 3. Перейдите в каталог проекта:
 
-   
 ```
-cd clojureQrServer/my-web-app
+cd clojureQrServer/QR-Server
 ```
-   
 
-4. Запустите сервер с помощью команды:
+4. Перекомпилируйте ClojureScript в JavaScript:
 
-``` 
+```
+lein cljsbuild once cljs
+```
+
+5. Запустите сервер с помощью команды:
+
+```
 lein run
-```   
+```
+
 
 ## Использование
+
+Для **использования сканера** с мобильного устройства **необходимо** **подключить протокол HTTPS**, так как функция `getUserMedia` из JavaScript **не работает с HTTP протоколом**.
 
 После успешного запуска сервера вы сможете использовать его для кодирования и декодирования QR-кодов.
 
@@ -72,7 +77,8 @@ lein run
 
 Для получения лог данных необходимо перейти на страницу /logger. В результате будут отображены лог данные, а именно: id операции, время операции, оперируемые данные.
 
-Однако для получения log данных необходимо иметь права администратора.
+Для получения log данных необходимо иметь права администратора.
+
 Пример логгера:
 
 ![ввод строки для кодирования](./docs/readme/logger-page.png)
@@ -84,7 +90,7 @@ lein run
 
 ## Реализация
 
-### Точка входа в программу(main)
+### Точка входа в программу (core.clj)
 
 ```
 (def app
@@ -99,21 +105,22 @@ lein run
 ```
 
 В данном фрагменте кода представлен функция main, которая запускает веб-сервер на порте 3000 для обслуживания обработчика app. 
-### Роутер
+### Маршруты (routes.clj)
 
 ```
 (defroutes app-routes
   (GET "/home" [] handlers/home-handler)
+
   (GET "/scanner" [] (pages/scanner-page))
   (GET "/logger" [] handlers/logger-handler)
-  (GET "/login" [] handlers/login-handler)
-  (GET "/logout" [] handlers/logout-handler)
-  (POST "/login" [] cas/cas-auth)
-
   (POST "/log" [qrData] (db/insert-log qrData))
 
   (GET "/qrgenerator" [] (pages/qr-page))
-  (POST "/qrgenerator" [text] (handlers/qr-generator text)))
+  (POST "/qrgenerator" [text] (handlers/qr-generator text))
+  
+  (GET "/login" [] handlers/login-handler)
+  (GET "/logout" [] handlers/logout-handler)
+  (POST "/login" [] cas/cas-auth))
 ```
 В данном фрагменте кода представлен обработчик последовательности машртрутов. 
 Маршрут описан следующим образом: 
@@ -121,7 +128,7 @@ lein run
 * маршрут 
 * аргументы для функции-обработчика
 * функция обработчик 
-### Функции-обработчики
+### Функции-обработчики (handlers.clj)
 
 ```
 (defn logger-handler [req]
@@ -152,21 +159,25 @@ lein run
 В данном фрагменте кода представлены функции-обработчики машртрутов.
 
 
-### CAS-Авторизация
+### CAS авторизация (auth.clj)
 
 ```
 
 (defn verify-token [token]
     ...
 )
+
 (defn verify-admin-token [token] 
     ...
 )
+
 (defn- generate-token [login]
-  ) ; Генерируем токен
+)
+
 (defn- admin-login-validation [login password]
     ...
 )
+
 (defn- user-login-validation [login password]
     ...
 )
@@ -175,28 +186,25 @@ lein run
     ...
 )
 
-
 (defn- authentication [login password]
     ...
 )
-
 
 (defn cas-auth [request]
     ...
 )
 ```
-В данном фрагменте кода представлена реализация cas-авторизации. 
+В данном фрагменте кода представлена реализация cas авторизации. 
 При попытке авторизации введенные пользователем данные передаются функции cas-auth.
 cas-auth передает данные функции, которая генерирует специальный токен.
 Далее токен возвращается и проверяется его валидность. 
 В случае валидности токена пользователь получает доступ к системе.
 
-### Взаимодействие с базой данных
+### Взаимодействие с базой данных (db.clj)
 
 ```
 (def db-params
 )
-
 
 (defn get-connection []
 )
@@ -204,14 +212,13 @@ cas-auth передает данные функции, которая генер
 (defn get-all-logs [db]
 )
 
-
 (defn insert-log [data]
 )
 ```
 В качестве СУБД была выбрана postgres.
 База данных используется для хранения логов, предоставляющих следующую информацию: id, время выполнения операции, оперируемая строка.
 
-### Страницы
+### Страницы (pages.clj)
 ```
 (defn render-page [title content]
     ...
