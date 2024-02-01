@@ -1,7 +1,7 @@
 # QR Server
 Веб-приложение, предназначенное для кодирования и декодирования информации.
 
-[Рабочий стенд для проверки сканирования](https://untouchabl3pineapple.github.io/clojureQR-Stand/).
+[Рабочий стенд для проверки сканирования](https://untouchabl3pineapple.github.io/clojureQrServer/).
 
 
 
